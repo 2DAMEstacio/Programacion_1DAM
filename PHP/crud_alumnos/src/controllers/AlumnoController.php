@@ -11,9 +11,11 @@ final class AlumnoController
 {
     public function index(): void
     {
+        //Consulta al modelo
         $alumnos = Alumno::all();
         $flash = SessionController::pull('flash');
 
+        //Mostrar a la vista
         require __DIR__ . '/../views/alumnos/index.php';
     }
 
@@ -35,7 +37,8 @@ final class AlumnoController
         }
 
         $errores = Alumno::validate($_POST);
-        $alumno = Alumno::fromArray($_POST);
+        $alumno = Alumno::alumnoFromPost($_POST);
+
 
         if ($errores !== []) {
             $modo = 'crear';
@@ -50,7 +53,7 @@ final class AlumnoController
             header('Location: index.php');
             exit;
         } catch (Throwable $exception) {
-            $errores[] = 'No se ha podido guardar el alumno.';
+            $errores[] = 'No se ha podido guardar el alumno.' . $exception->getMessage();
             $modo = 'crear';
             $titulo = 'Nuevo alumno';
             require __DIR__ . '/../views/alumnos/form.php';
@@ -83,7 +86,7 @@ final class AlumnoController
 
         $id = (int) ($_POST['id'] ?? 0);
         $errores = Alumno::validate($_POST, $id);
-        $alumno = Alumno::fromArray($_POST);
+        $alumno = Alumno::alumnoFromPost($_POST);
         $alumno->setId($id);
 
         if ($errores !== []) {

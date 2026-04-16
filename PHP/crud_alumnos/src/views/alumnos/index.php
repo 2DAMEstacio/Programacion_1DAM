@@ -16,7 +16,7 @@ require __DIR__ . '/../partials/header.php';
 
 <?php if ($flash !== null): ?>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             toastr.options = {
                 closeButton: true,
                 progressBar: true,
@@ -50,6 +50,7 @@ require __DIR__ . '/../partials/header.php';
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Edad</th>
+                    <th>Es friki</th>
                     <th>Curso</th>
                     <th>Acciones</th>
                 </tr>
@@ -71,6 +72,7 @@ require __DIR__ . '/../partials/header.php';
                             <td><?= e($alumno->getNombre()) ?></td>
                             <td><?= e($alumno->getEmail()) ?></td>
                             <td><?= e($alumno->getEdad()) ?></td>
+                            <td><?= e($alumno->getEsfriki() == false ? "NO" : "SÍ") ?></td>
                             <td><span class="badge"><?= e($alumno->getCurso()) ?></span></td>
                             <td>
                                 <div class="actions">

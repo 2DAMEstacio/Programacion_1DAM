@@ -9,66 +9,83 @@ use PDO;
 
 final class Alumno
 {
-    private ?int $id;
-    private string $nombre;
-    private string $email;
-    private int $edad;
-    private string $curso;
+    private ?int $id = null;
+    private string $nombre = '';
+    private string $email = '';
+    private int $edad = 0;
+    private string $curso = '';
+    private bool $esfriki = false;
 
-    public function __construct(
-        ?int $id = null,
-        string $nombre = '',
-        string $email = '',
-        int $edad = 18,
-        string $curso = ''
-    ) {
-        $this->id = $id;
-        $this->nombre = $nombre;
-        $this->email = $email;
-        $this->edad = $edad;
-        $this->curso = $curso;
+    // Crea un objeto Alumno a partir de los datos recibidos desde el formulario.
+    public static function alumnoFromPost(array $data): self
+    {
+        // Convierte los datos enviados por el formulario en un objeto Alumno ya tipado.
+        $alumno = new self();
+        $alumno->setNombre(trim((string) ($data['nombre'] ?? '')));
+        $alumno->setEmail(trim((string) ($data['email'] ?? '')));
+        $alumno->setEdad(isset($data['edad']) && $data['edad'] !== '' ? (int) $data['edad'] : 18);
+        $alumno->setCurso(trim((string) ($data['curso'] ?? '')));
+        $alumno->setEsfriki((bool) ($data['esfriki'] ?? false));
+        return $alumno;
     }
 
+    // Obtiene todos los alumnos de la base de datos ordenados por nombre.
     public static function all(): array
     {
         $conexion = Database::conectar();
-        if (!$conexion instanceof PDO) {
+        if ($conexion === null) {
             return [];
         }
 
-        $statement = $conexion->query('SELECT id, nombre, email, edad, curso FROM alumnos ORDER BY nombre ASC');
+        $sql = 'SELECT * FROM alumnos ORDER BY nombre ASC';
+        $statement = $conexion->query($sql);
 
-        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+        // FETCH_CLASS hace que cada fila se convierta automaticamente en un objeto Alumno.
+        $alumnos = $statement->fetchAll(PDO::FETCH_CLASS, Alumno::class);
 
-        return array_map(static fn (array $row): self => self::fromArray($row), $rows);
+        return $alumnos;
     }
 
+    // Busca un alumno concreto por su id y lo devuelve como objeto.
     public static function find(int $id): ?self
     {
         $conexion = Database::conectar();
-        if (!$conexion instanceof PDO) {
+        if ($conexion === null) {
             return null;
         }
 
-        $statement = $conexion->prepare('SELECT id, nombre, email, edad, curso FROM alumnos WHERE id = :id');
+        $sql = 'SELECT * FROM alumnos WHERE id = :id';
+        $statement = $conexion->prepare($sql);
         $statement->execute(['id' => $id]);
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        // Indicamos a PDO que el unico resultado debe devolverse como objeto Alumno.
+        $statement->setFetchMode(PDO::FETCH_CLASS, Alumno::class);
 
-        return $row === false ? null : self::fromArray($row);
+        $resultado = $statement->fetch();
+        $alumno = $resultado instanceof self ? $resultado : null;
+
+        return $alumno;
     }
 
+    // Inserta en la base de datos los datos del alumno actual.
     public function insert(): bool
     {
         $conexion = Database::conectar();
-        if (!$conexion instanceof PDO) {
+        if ($conexion === null) {
             return false;
         }
 
         $statement = $conexion->prepare(
-            'INSERT INTO alumnos (nombre, email, edad, curso) VALUES (:nombre, :email, :edad, :curso)'
+            'INSERT INTO alumnos (nombre, email, edad, curso, esfriki) VALUES (:nombre, :email, :edad, :curso, :esfriki)'
         );
 
-        $saved = $statement->execute($this->toDatabaseArray());
+        // execute() rellena los marcadores :nombre, :email... con estos valores de forma segura.
+        $saved = $statement->execute([
+            'nombre' => $this->getNombre(),
+            'email' => $this->getEmail(),
+            'edad' => $this->getEdad(),
+            'curso' => $this->getCurso(),
+            'esfriki' => (int) $this->getEsfriki(),
+        ]);
         if ($saved) {
             $this->setId((int) $conexion->lastInsertId());
         }
@@ -76,10 +93,11 @@ final class Alumno
         return $saved;
     }
 
+    // Actualiza en la base de datos el registro del alumno actual.
     public function update(): bool
     {
         $conexion = Database::conectar();
-        if (!$conexion instanceof PDO) {
+        if ($conexion === null) {
             return false;
         }
 
@@ -87,21 +105,32 @@ final class Alumno
             'UPDATE alumnos SET nombre = :nombre, email = :email, edad = :edad, curso = :curso WHERE id = :id'
         );
 
-        return $statement->execute($this->toDatabaseArray(includeId: true));
+        $updated = $statement->execute([
+            'id' => $this->getId(),
+            'nombre' => $this->getNombre(),
+            'email' => $this->getEmail(),
+            'edad' => $this->getEdad(),
+            'curso' => $this->getCurso(),
+        ]);
+
+        return $updated;
     }
 
+    // Elimina de la base de datos el alumno cuyo id se recibe como parametro.
     public static function delete(int $id): bool
     {
         $conexion = Database::conectar();
-        if (!$conexion instanceof PDO) {
+        if ($conexion === null) {
             return false;
         }
 
         $statement = $conexion->prepare('DELETE FROM alumnos WHERE id = :id');
+        $deleted = $statement->execute(['id' => $id]);
 
-        return $statement->execute(['id' => $id]);
+        return $deleted;
     }
 
+    // Comprueba que los datos del formulario cumplen las reglas basicas de validacion.
     public static function validate(array $data, ?int $ignoreId = null): array
     {
         $errors = [];
@@ -135,17 +164,6 @@ final class Alumno
         }
 
         return $errors;
-    }
-
-    public static function fromArray(array $data): self
-    {
-        return new self(
-            id: isset($data['id']) ? (int) $data['id'] : null,
-            nombre: (string) ($data['nombre'] ?? ''),
-            email: (string) ($data['email'] ?? ''),
-            edad: isset($data['edad']) ? (int) $data['edad'] : 18,
-            curso: (string) ($data['curso'] ?? '')
-        );
     }
 
     public function getId(): ?int
@@ -198,32 +216,18 @@ final class Alumno
         $this->curso = $curso;
     }
 
-    private function toDatabaseArray(bool $includeId = false): array
-    {
-        $payload = [
-            'nombre' => $this->getNombre(),
-            'email' => $this->getEmail(),
-            'edad' => $this->getEdad(),
-            'curso' => $this->getCurso(),
-        ];
-
-        if ($includeId) {
-            $payload['id'] = $this->getId();
-        }
-
-        return $payload;
-    }
-
+    // Comprueba si ya existe otro alumno con el mismo email en la base de datos.
     private static function emailExists(string $email, ?int $ignoreId = null): bool
     {
         $conexion = Database::conectar();
-        if (!$conexion instanceof PDO) {
+        if ($conexion === null) {
             return false;
         }
 
         $sql = 'SELECT COUNT(*) FROM alumnos WHERE email = :email';
         $params = ['email' => $email];
 
+        // En edicion excluimos el propio id para no detectar como duplicado el mismo registro.
         if ($ignoreId !== null) {
             $sql .= ' AND id != :id';
             $params['id'] = $ignoreId;
@@ -231,7 +235,21 @@ final class Alumno
 
         $statement = $conexion->prepare($sql);
         $statement->execute($params);
+        $totalCoincidencias = (int) $statement->fetchColumn();
+        $emailExiste = $totalCoincidencias > 0;
 
-        return (int) $statement->fetchColumn() > 0;
+        return $emailExiste;
+    }
+
+    public function getEsfriki(): bool
+    {
+        return $this->esfriki;
+    }
+
+    public function setEsfriki(bool $esfriki): self
+    {
+        $this->esfriki = $esfriki;
+
+        return $this;
     }
 }

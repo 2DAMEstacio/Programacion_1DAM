@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/lib/utils.php';
@@ -8,6 +8,7 @@ require_once __DIR__ . '/../src/lib/utils.php';
 use App\controllers\AlumnoController;
 use App\controllers\SessionController;
 
+//Inciar la sesión si no existe
 SessionController::start();
 
 $controller = new AlumnoController();
