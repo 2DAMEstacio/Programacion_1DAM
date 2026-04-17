@@ -34,6 +34,15 @@ require __DIR__ . '/../partials/header.php';
     </script>
 <?php endif; ?>
 
+<section class="hero">
+    <form method="GET" action="index.php?accion=index" style="display:flex; flex-direction: row; justify-content: center; align-items: center; gap:10px">
+        <span>Texto</span>
+        <input type="text" name="filtro" placeholder="Introduce parte del nombre a buscar">
+        <button class="button button-primary" type="submit">Filtrar</button>
+    </form>
+
+</section>
+
 <section class="panel">
     <div class="panel-header">
         <div>

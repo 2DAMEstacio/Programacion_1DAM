@@ -11,14 +11,18 @@ final class AlumnoController
 {
     public function index(): void
     {
-
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            header('Location: index.php');
+            exit;
+        }
 
         //Verificar si existe un texto en el filtro 
-        //Si no existe
-        //Consulta al modelo
-        $alumnos = Alumno::all();
-        //Si existe filtro 
-        // $alumnos = Alumno::filteredByText();
+        $filtro = $_GET['filtro'] ?? '';
+        if ($filtro == '') {
+            $alumnos = Alumno::all();
+        } else {
+            $alumnos = Alumno::filteredByText($filtro);
+        }
 
         $flash = SessionController::pull('flash');
 

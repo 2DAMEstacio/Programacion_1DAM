@@ -50,6 +50,24 @@ final class Alumno
         return $alumnos;
     }
 
+    public static function filteredByText($textoFiltro): array
+    {
+        $conexion = Database::conectar();
+        if ($conexion === null) {
+            return [];
+        }
+
+        $sql = 'SELECT * FROM alumnos WHERE alumnos.nombre like :textoFiltro ORDER BY nombre ASC';
+        $statement = $conexion->prepare($sql);
+        $statement->execute(['textoFiltro' => '%' . $textoFiltro . '%']);
+
+        // FETCH_CLASS hace que cada fila se convierta automaticamente en un objeto Alumno.
+        $alumnos = $statement->fetchAll(PDO::FETCH_CLASS, Alumno::class);
+
+        return $alumnos;
+    }
+
+
     // Busca un alumno concreto por su id y lo devuelve como objeto.
     public static function find(int $id): ?self
     {
