@@ -15,17 +15,21 @@ final class Alumno
     private int $edad = 0;
     private string $curso = '';
     private bool $esfriki = false;
+    private float $nota = 0;
+    private string $avatar = '';
 
     // Crea un objeto Alumno a partir de los datos recibidos desde el formulario.
-    public static function alumnoFromPost(array $data): self
+    public static function alumnoFromPost(array $postInfo): self
     {
         // Convierte los datos enviados por el formulario en un objeto Alumno ya tipado.
         $alumno = new self();
-        $alumno->setNombre(trim((string) ($data['nombre'] ?? '')));
-        $alumno->setEmail(trim((string) ($data['email'] ?? '')));
-        $alumno->setEdad(isset($data['edad']) && $data['edad'] !== '' ? (int) $data['edad'] : 18);
-        $alumno->setCurso(trim((string) ($data['curso'] ?? '')));
-        $alumno->setEsfriki((bool) ($data['esfriki'] ?? false));
+        $alumno->setNombre(trim((string) ($postInfo['nombre'] ?? '')));
+        $alumno->setEmail(trim((string) ($postInfo['email'] ?? '')));
+        $alumno->setEdad(isset($postInfo['edad']) && $postInfo['edad'] !== '' ? (int) $postInfo['edad'] : 18);
+        $alumno->setCurso(trim((string) ($postInfo['curso'] ?? '')));
+        $alumno->setEsfriki((bool) ($postInfo['esfriki'] ?? false));
+        $alumno->setAvatar(trim((string) ($postInfo['avatar'] ?? '')));
+        $alumno->setNota(isset($postInfo['nota']) && $postInfo['nota'] !== '' ? (float) $postInfo['nota'] : 18);
         return $alumno;
     }
 
@@ -75,7 +79,7 @@ final class Alumno
         }
 
         $statement = $conexion->prepare(
-            'INSERT INTO alumnos (nombre, email, edad, curso, esfriki) VALUES (:nombre, :email, :edad, :curso, :esfriki)'
+            'INSERT INTO alumnos (nombre, email, edad, curso, esfriki, nota, avatar) VALUES (:nombre, :email, :edad, :curso, :esfriki, :nota, :avatar)'
         );
 
         // execute() rellena los marcadores :nombre, :email... con estos valores de forma segura.
@@ -85,6 +89,8 @@ final class Alumno
             'edad' => $this->getEdad(),
             'curso' => $this->getCurso(),
             'esfriki' => (int) $this->getEsfriki(),
+            'avatar' => $this->getAvatar(),
+            'nota' => $this->getNota()
         ]);
         if ($saved) {
             $this->setId((int) $conexion->lastInsertId());
@@ -102,7 +108,7 @@ final class Alumno
         }
 
         $statement = $conexion->prepare(
-            'UPDATE alumnos SET nombre = :nombre, email = :email, edad = :edad, curso = :curso WHERE id = :id'
+            'UPDATE alumnos SET nombre = :nombre, email = :email, edad = :edad, curso = :curso, esfriki=:esfriki, nota=:nota, avatar=:avatar WHERE id = :id'
         );
 
         $updated = $statement->execute([
@@ -111,6 +117,9 @@ final class Alumno
             'email' => $this->getEmail(),
             'edad' => $this->getEdad(),
             'curso' => $this->getCurso(),
+            'esfriki' => (int) $this->getEsfriki(),
+            'avatar' => $this->getAvatar(),
+            'nota' => $this->getNota()
         ]);
 
         return $updated;
@@ -249,6 +258,46 @@ final class Alumno
     public function setEsfriki(bool $esfriki): self
     {
         $this->esfriki = $esfriki;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nota
+     */
+    public function getNota()
+    {
+        return $this->nota;
+    }
+
+    /**
+     * Set the value of nota
+     *
+     * @return  self
+     */
+    public function setNota($nota)
+    {
+        $this->nota = $nota;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of avatar
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * Set the value of avatar
+     *
+     * @return  self
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

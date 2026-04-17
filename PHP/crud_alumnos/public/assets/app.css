@@ -23,7 +23,9 @@
     --radius-md: 14px;
 }
 
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
@@ -37,9 +39,9 @@ body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
     background-size: 24px 24px;
-    mask-image: linear-gradient(180deg, rgba(0,0,0,0.35), transparent 80%);
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 80%);
     pointer-events: none;
 }
 
@@ -68,7 +70,9 @@ body::before {
     margin-bottom: 24px;
 }
 
-.hero.compact { align-items: center; }
+.hero.compact {
+    align-items: center;
+}
 
 .eyebrow {
     display: inline-block;
@@ -83,7 +87,11 @@ body::before {
     text-transform: uppercase;
 }
 
-h1, h2, p { margin: 0; }
+h1,
+h2,
+p {
+    margin: 0;
+}
 
 h1 {
     font-size: clamp(2.2rem, 5vw, 4rem);
@@ -114,7 +122,9 @@ p {
     margin-bottom: 20px;
 }
 
-.table-wrap { overflow-x: auto; }
+.table-wrap {
+    overflow-x: auto;
+}
 
 table {
     width: 100%;
@@ -181,7 +191,9 @@ tbody tr:hover {
     color: #fff;
 }
 
-.button-primary:hover { background: var(--primary-dark); }
+.button-primary:hover {
+    background: var(--primary-dark);
+}
 
 .button-secondary {
     background: var(--secondary);
@@ -227,6 +239,16 @@ label {
     display: grid;
     gap: 8px;
     font-weight: 600;
+}
+
+select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(78, 55, 28, 0.14);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.7);
+    font: inherit;
+    color: var(--text);
 }
 
 input {

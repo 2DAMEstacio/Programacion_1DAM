@@ -49,6 +49,21 @@ require __DIR__ . '/../partials/header.php';
             <span>Curso</span>
             <input type="text" name="curso" value="<?= e($alumno->getCurso()) ?>" placeholder="1DAM" required>
         </label>
+        <label>
+            <span>Es friki</span>
+            <select name="esfriki">
+                <option value="1" <?= e($alumno->getEsfriki() ? "selected" : "") ?>>Sí</option>
+                <option value="0" <?= e($alumno->getEsfriki() ? "" : "selected") ?>>No</option>
+            </select>
+        </label>
+        <label>
+            <span>Nota media</span>
+            <input type="number" name="nota" value="<?= e($alumno->getNota()) ?>" required>
+        </label>
+        <label>
+            <span>Url avatar</span>
+            <input type="text" name="avatar" value="<?= e($alumno->getAvatar()) ?>" required>
+        </label>
 
         <div class="form-actions">
             <button class="button button-primary" type="submit"><?= $modo === 'crear' ? 'Guardar alumno' : 'Actualizar alumno' ?></button>

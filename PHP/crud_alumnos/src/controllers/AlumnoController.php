@@ -11,8 +11,15 @@ final class AlumnoController
 {
     public function index(): void
     {
+
+
+        //Verificar si existe un texto en el filtro 
+        //Si no existe
         //Consulta al modelo
         $alumnos = Alumno::all();
+        //Si existe filtro 
+        // $alumnos = Alumno::filteredByText();
+
         $flash = SessionController::pull('flash');
 
         //Mostrar a la vista

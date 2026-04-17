@@ -46,11 +46,13 @@ require __DIR__ . '/../partials/header.php';
         <table>
             <thead>
                 <tr>
+                    <th></th>
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Edad</th>
                     <th>Es friki</th>
+                    <th>Nota media</th>
                     <th>Curso</th>
                     <th>Acciones</th>
                 </tr>
@@ -68,11 +70,13 @@ require __DIR__ . '/../partials/header.php';
                 <?php else: ?>
                     <?php foreach ($alumnos as $alumno): ?>
                         <tr>
+                            <td><img src="<?= e($alumno->getAvatar()) ?>" width="60px" /></td>
                             <td>#<?= e($alumno->getId()) ?></td>
                             <td><?= e($alumno->getNombre()) ?></td>
                             <td><?= e($alumno->getEmail()) ?></td>
                             <td><?= e($alumno->getEdad()) ?></td>
                             <td><?= e($alumno->getEsfriki() == false ? "NO" : "SÍ") ?></td>
+                            <td><?= e($alumno->getNota()) ?></td>
                             <td><span class="badge"><?= e($alumno->getCurso()) ?></span></td>
                             <td>
                                 <div class="actions">
