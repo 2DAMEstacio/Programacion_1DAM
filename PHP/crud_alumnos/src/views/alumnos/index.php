@@ -36,8 +36,20 @@ require __DIR__ . '/../partials/header.php';
 
 <section class="hero">
     <form method="GET" action="index.php?accion=index" style="display:flex; flex-direction: row; justify-content: center; align-items: center; gap:10px">
-        <span>Texto</span>
         <input type="text" name="filtro" placeholder="Introduce parte del nombre a buscar">
+        <select name="curso">
+            <?php
+            // echo "<option value=''>Cualquiera</option>";
+            // foreach ($options as $optionSel) {
+            //     echo "<option value='$optionSel'>$optionSel</option>";
+            // }
+            ?>
+
+            <option value=''>Cualquiera</option>
+            <?php foreach ($options as $optionSel): ?>
+                <option value='<?= $optionSel ?>'><?= $optionSel ?></option>
+            <?php endforeach; ?>
+        </select>
         <button class="button button-primary" type="submit">Filtrar</button>
     </form>
 

@@ -50,16 +50,38 @@ final class Alumno
         return $alumnos;
     }
 
-    public static function filteredByText($textoFiltro): array
+    public static function filteredByTextAndCourse($textoFiltro, $course): array
     {
         $conexion = Database::conectar();
         if ($conexion === null) {
             return [];
         }
 
-        $sql = 'SELECT * FROM alumnos WHERE alumnos.nombre like :textoFiltro ORDER BY nombre ASC';
+        $sql = 'SELECT * FROM alumnos WHERE ';
+        $tieneTextoFiltro = false;
+        if ($textoFiltro != '') {
+            $tieneTextoFiltro = true;
+            $sql = $sql . ' alumnos.nombre like :textoFiltro ';
+        }
+        if ($course != '') {
+            if ($tieneTextoFiltro == true) {
+                $sql = $sql . 'and ';
+            }
+            $sql = $sql . ' alumnos.curso like :cursoSel ';
+        }
+
+        $sql = $sql . ' order by alumnos.nombre ASC';
         $statement = $conexion->prepare($sql);
-        $statement->execute(['textoFiltro' => '%' . $textoFiltro . '%']);
+        $paramsQuery = [];
+        if ($textoFiltro != '') {
+            $paramsQuery['textoFiltro'] = '%' . $textoFiltro . '%';
+        }
+        if ($course != '') {
+            $paramsQuery['cursoSel'] =  $course;
+        }
+
+        // var_dump($paramsQuery);
+        $statement->execute($paramsQuery);
 
         // FETCH_CLASS hace que cada fila se convierta automaticamente en un objeto Alumno.
         $alumnos = $statement->fetchAll(PDO::FETCH_CLASS, Alumno::class);
@@ -67,6 +89,23 @@ final class Alumno
         return $alumnos;
     }
 
+    public static function obtenerModulosAlumnos()
+    {
+        $conexion = Database::conectar();
+        if ($conexion === null) {
+            return [];
+        }
+
+        $sql = 'SELECT curso FROM alumnos group by curso';
+        $resultado = $conexion->query($sql);
+
+        $options = [];
+        foreach ($resultado as $fila) {
+            $options[] = $fila['curso'];
+        }
+
+        return $options;
+    }
 
     // Busca un alumno concreto por su id y lo devuelve como objeto.
     public static function find(int $id): ?self

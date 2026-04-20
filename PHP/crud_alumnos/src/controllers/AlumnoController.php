@@ -18,13 +18,15 @@ final class AlumnoController
 
         //Verificar si existe un texto en el filtro 
         $filtro = $_GET['filtro'] ?? '';
-        if ($filtro == '') {
+        $curso =  $_GET['curso'] ?? '';
+        if ($filtro == '' && $curso == '') {
             $alumnos = Alumno::all();
         } else {
-            $alumnos = Alumno::filteredByText($filtro);
+            $alumnos = Alumno::filteredByTextAndCourse($filtro, $curso);
         }
 
         $flash = SessionController::pull('flash');
+        $options = Alumno::obtenerModulosAlumnos();
 
         //Mostrar a la vista
         require __DIR__ . '/../views/alumnos/index.php';
