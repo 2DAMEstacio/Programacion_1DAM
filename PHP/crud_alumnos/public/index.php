@@ -6,6 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/lib/utils.php';
 
 use App\controllers\AlumnoController;
+use App\controllers\DashboardController;
 use App\controllers\SessionController;
 
 //Inciar la sesión si no existe
@@ -29,6 +30,10 @@ switch ($accion) {
         break;
     case 'eliminar':
         $controller->eliminar();
+        break;
+    case 'resumen':
+        $dashboardController = new DashboardController();
+        $dashboardController->resumen();
         break;
     default:
         $controller->index();

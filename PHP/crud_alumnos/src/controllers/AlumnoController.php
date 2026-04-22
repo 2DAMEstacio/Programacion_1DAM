@@ -32,6 +32,7 @@ final class AlumnoController
         require __DIR__ . '/../views/alumnos/index.php';
     }
 
+
     public function crear(): void
     {
         $alumno = new Alumno();

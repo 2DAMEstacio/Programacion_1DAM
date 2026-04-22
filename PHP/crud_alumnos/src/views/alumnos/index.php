@@ -11,6 +11,7 @@ require __DIR__ . '/../partials/header.php';
         <h1>Gestión de alumnos</h1>
         <p>Proyecto MVC en PHP con una base ligera, configuración por entorno y una interfaz más cuidada para trabajar el CRUD sin fricción.</p>
     </div>
+    <a class="button " href="index.php?accion=resumen">Dashboard</a>
     <a class="button button-primary" href="index.php?accion=crear">Nuevo alumno</a>
 </section>
 
