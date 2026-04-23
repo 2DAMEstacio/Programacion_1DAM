@@ -21,13 +21,9 @@
 
         <section class="stats-grid">
             <?= $cardTotalAlumnos ?>
-
             <?= $cardNotaMedia ?>
-
             <?= $cardAlumnosFrikis ?>
-
             <?= $cardCursoMasNumeroso ?>
-
         </section>
 
         <section class="layout">
@@ -51,41 +47,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><span class="badge">1DAM</span></td>
-                                <td>8</td>
-                                <td>19,8</td>
-                                <td>7,10</td>
-                                <td>37,5%</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge">2DAM</span></td>
-                                <td>6</td>
-                                <td>20,6</td>
-                                <td>6,92</td>
-                                <td>33,3%</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge">1DAW</span></td>
-                                <td>5</td>
-                                <td>18,9</td>
-                                <td>6,40</td>
-                                <td>20,0%</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge">2DAW</span></td>
-                                <td>4</td>
-                                <td>21,2</td>
-                                <td>7,35</td>
-                                <td>50,0%</td>
-                            </tr>
-                            <tr>
-                                <td><span class="badge">1ASIR</span></td>
-                                <td>3</td>
-                                <td>20,3</td>
-                                <td>6,05</td>
-                                <td>33,3%</td>
-                            </tr>
+                            <?php foreach ($estadisticasPorCurso as $estadisticaSeleccionada): ?>
+                                <tr>
+                                    <td><span class="badge"><?= $estadisticaSeleccionada->getCurso() ?></span></td>
+                                    <td><?= $estadisticaSeleccionada->getTotal_alumnos() ?></td>
+                                    <td><?= $estadisticaSeleccionada->getEdad_media() ?></td>
+                                    <td><?= $estadisticaSeleccionada->getNota_media() ?></td>
+                                    <td><?= $estadisticaSeleccionada->getFrikis() . '%' ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -100,45 +70,16 @@
                 </div>
 
                 <div class="ranking-list">
-                    <article class="ranking-item">
-                        <div>
-                            <strong>Lucía Navarro</strong>
-                            <span>2DAW · 20 años</span>
-                        </div>
-                        <div class="score">9,8</div>
-                    </article>
 
-                    <article class="ranking-item">
-                        <div>
-                            <strong>Sergio Ruiz</strong>
-                            <span>2DAM · 21 años</span>
-                        </div>
-                        <div class="score">9,4</div>
-                    </article>
+                    <?= $top5; ?>
 
-                    <article class="ranking-item">
-                        <div>
-                            <strong>Marta López</strong>
-                            <span>1DAM · 19 años</span>
-                        </div>
-                        <div class="score">8,9</div>
-                    </article>
-
-                    <article class="ranking-item">
-                        <div>
-                            <strong>David Torres</strong>
-                            <span>1ASIR · 22 años</span>
-                        </div>
-                        <div class="score">8,7</div>
-                    </article>
-
-                    <article class="ranking-item">
-                        <div>
-                            <strong>Carla Pérez</strong>
-                            <span>1DAW · 18 años</span>
-                        </div>
-                        <div class="score">8,5</div>
-                    </article>
+                    <!-- <article class="ranking-item">
+                            <div>
+                                <strong>Lucía Navarro</strong>
+                                <span>2DAW · 20 años</span>
+                            </div>
+                            <div class="score">9,8</div>
+                        </article> -->
                 </div>
             </aside>
         </section>

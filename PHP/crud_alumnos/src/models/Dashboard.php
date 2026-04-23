@@ -46,6 +46,38 @@ final class Dashboard
         return $totalNotas;
     }
 
+    public static function getEstadisticas()
+    {
+        $conexion = Database::conectar();
+        if ($conexion === null) {
+            return [];
+        }
+
+        $sql = "
+            SELECT curso, count(id) as total_alumnos, 
+            AVG(edad) as edad_media, AVG(nota) as nota_media, 
+            AVG(esfriki = 1) * 100 as frikis
+            FROM alumnos
+            GROUP BY curso 
+        ";
+        $statement = $conexion->prepare($sql);
+        $statement->execute();
+        $estadisticasClase = $statement->fetchAll(PDO::FETCH_CLASS, EstadisticaClase::class);
+        return  $estadisticasClase;
+    }
+
+    public static function getTopAlumnos()
+    {
+
+        $conexion = Database::conectar();
+        if ($conexion === null) {
+            return [];
+        }
+        $sql = 'SELECT nombre, edad, curso, nota FROM alumnos ORDER BY nota DESC LIMIT 5';
+        $resultado = $conexion->query($sql);
+        return $resultado;
+    }
+
     public static function getFrikisTotales()
     {
         $conexion = Database::conectar();
