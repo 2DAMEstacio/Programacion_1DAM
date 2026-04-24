@@ -1,0 +1,21 @@
+{
+  "name": "iestacio/encuestas-usuarios",
+  "description": "Sistema de encuestas con usuarios registrados en PHP, MVC, Composer y MySQL",
+  "type": "project",
+  "require": {
+    "php": "^8.1",
+    "vlucas/phpdotenv": "^5.6",
+    "bower-asset/toastr": "^2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "repositories": {
+    "asset-packagist": {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  }
+}
