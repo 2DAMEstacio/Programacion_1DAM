@@ -1,6 +1,6 @@
-# Sistema de encuestas con usuarios registrados
+# Sistema de Encuestas con Usuarios Registrados
 
-Actividad inicial para practicar PHP, MVC, Composer, formularios, sesiones, PDO y MySQL.
+Actividad de aula para practicar PHP, MVC, Composer, formularios, sesiones, PDO y MySQL a partir de una aplicación sencilla de encuestas.
 
 ## Requisitos
 
@@ -9,16 +9,73 @@ Actividad inicial para practicar PHP, MVC, Composer, formularios, sesiones, PDO 
 - MySQL o MariaDB
 - Extensión `pdo_mysql` habilitada
 
-## Estructura
+## Dependencias
+
+Este proyecto utiliza Composer y actualmente incluye:
+
+- `vlucas/phpdotenv` para cargar variables de entorno desde `.env`
+- `bower-asset/toastr` para mostrar notificaciones en la interfaz
+
+Instalación:
+
+```bash
+composer install
+```
+
+## Configuración
+
+Crea tu archivo de configuración local a partir del ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+Después revisa, como mínimo, estos valores:
+
+- `DB_HOST`
+- `DB_PORT`
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+
+## Base de datos
+
+Importa el esquema inicial:
+
+```bash
+mysql -u root -p < database/schema.sql
+```
+
+Ese fichero crea:
+
+- la base de datos
+- las tablas de usuarios, preguntas, opciones y votos
+- una encuesta inicial con varias opciones
+
+## Ejecución
+
+Arranca el servidor embebido de PHP:
+
+```bash
+php -S localhost:8000 -t public
+```
+
+Después abre:
+
+```txt
+http://localhost:8000
+```
+
+## Estructura del proyecto
 
 ```txt
 encuestas_usuarios/
 ├── database/
 │   └── schema.sql
 ├── public/
-│   ├── index.php
-│   └── assets/
-│       └── style.css
+│   ├── assets/
+│   │   └── style.css
+│   └── index.php
 ├── src/
 │   ├── controllers/
 │   │   ├── AuthController.php
@@ -38,96 +95,81 @@ encuestas_usuarios/
 │   └── utils.php
 ├── .env.example
 ├── composer.json
+├── composer.lock
 └── README.md
 ```
 
-## Puesta en marcha
+## Estado actual del proyecto
 
-```bash
-composer install
-cp .env.example .env
-```
+La aplicación ya incluye:
 
-Edita `.env` si tu usuario, contraseña o base de datos son diferentes.
+- conexión a base de datos mediante PDO
+- carga de configuración desde `.env`
+- modelos con acceso real a datos
+- vistas de login, registro, encuesta y resultados
+- gestión completa de sesión y mensajes flash
 
-Después importa el fichero:
+Los controladores están preparados con un enfoque didáctico:
 
-```txt
-database/schema.sql
-```
-
-Arranca el servidor:
-
-```bash
-php -S localhost:8000 -t public
-```
-
-Abre:
-
-```txt
-http://localhost:8000
-```
+- `SessionController` está completamente implementado
+- `AuthController` y `EncuestaController` contienen comentarios guía para que el alumnado implemente la lógica
 
 ## Objetivo de la actividad
 
-Completar una aplicación en la que:
+La aplicación debe permitir que:
 
 1. Un usuario pueda registrarse.
 2. Un usuario pueda iniciar sesión.
-3. Solo los usuarios autenticados puedan votar.
-4. Cada usuario solo pueda votar una vez por encuesta.
-5. Se puedan consultar los resultados.
+3. Solo un usuario autenticado pueda acceder a la encuesta.
+4. Cada usuario pueda votar una sola vez por pregunta.
+5. Se puedan consultar los resultados de la encuesta activa.
 
-## Tareas para el alumnado
+## Qué debe implementar el alumnado
 
-### 1. Completar `src/models/Usuario.php`
+### Modelos
 
-- `registrar()`
-- `buscarPorEmail()`
-- `validarLogin()`
+Los modelos ya contienen una base funcional, pero se pueden utilizar como referencia para entender:
 
-Debe usarse:
+- cómo validar datos de entrada
+- cómo consultar con PDO usando sentencias preparadas
+- cómo convertir filas de base de datos en objetos
+- cómo insertar y actualizar información
 
-- `password_hash()`
-- `password_verify()`
-- consultas preparadas con PDO
+### Controladores
 
-### 2. Completar `src/models/Voto.php`
+La parte principal de la actividad está ahora en los controladores de autenticación y encuesta.
 
-- `yaHaVotado()`
-- `registrarVoto()`
+El alumnado debe completar la lógica necesaria para:
 
-La tabla `votos` tiene esta restricción:
+- recoger datos de formularios
+- validar entradas
+- invocar a los modelos adecuados
+- controlar los casos de error
+- guardar mensajes flash
+- redirigir entre pantallas
+- cargar la interfaz con los datos necesarios
 
-```sql
-UNIQUE(usuario_id, pregunta_id)
-```
+En la parte de voto, además, debe:
 
-Esto impide que un usuario vote dos veces en la misma encuesta.
+- comprobar si el usuario ya ha votado
+- validar que la opción elegida pertenece a la pregunta recibida
+- registrar el voto
+- actualizar el contador de votos de la opción
+- usar una transacción para que ambas operaciones se ejecuten juntas
 
-### 3. Completar `src/models/Opcion.php`
+### Vistas
 
-- `incrementarVotos()`
+Las vistas también incluyen una parte pendiente en la pantalla de resultados.
 
-Debe sumar 1 voto a la opción seleccionada.
+El alumnado debe calcular correctamente:
 
-### 4. Completar `src/controllers/EncuestaController.php`
+- el porcentaje de votos de cada opción
+- el ancho visual de cada barra a partir de ese porcentaje
 
-En el método `votar()` hay que:
+## Flujo esperado de la aplicación
 
-1. Comprobar que el usuario no haya votado.
-2. Registrar el voto.
-3. Incrementar el contador de votos.
-4. Usar una transacción.
-
-### 5. Completar `src/views/encuestas/resultados.php`
-
-Calcular el porcentaje real de votos de cada opción.
-
-## Ampliaciones posibles
-
-- Crear varias encuestas.
-- Añadir panel de administración.
-- Permitir crear preguntas y opciones desde formularios.
-- Mostrar gráficos con JavaScript.
-- Añadir fecha de cierre de encuesta.
+1. El usuario se registra.
+2. El usuario inicia sesión.
+3. Accede a la encuesta activa.
+4. Selecciona una opción y emite su voto.
+5. Consulta los resultados agregados.
