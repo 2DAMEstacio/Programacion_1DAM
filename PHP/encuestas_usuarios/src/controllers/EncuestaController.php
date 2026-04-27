@@ -11,6 +11,7 @@ class EncuestaController
         // Si no existe ninguna pregunta activa, prepara variables vacías o por defecto para que la interfaz pueda mostrarse sin errores.
         // Si sí existe, obtén también las posibles respuestas asociadas y averigua si el usuario actual ya ha participado.
         // Una vez preparados los datos, carga la interfaz completa de la página principal de la encuesta.
+        echo "Hola " . SessionController::usuarioNombre();
     }
 
     public function votar(): void

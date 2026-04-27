@@ -7,6 +7,7 @@ use App\controllers\AuthController;
 use App\controllers\EncuestaController;
 use App\controllers\SessionController;
 
+//Inicia la sesión en nuestro sistema
 SessionController::start();
 
 $action = $_GET['action'] ?? 'encuesta';
