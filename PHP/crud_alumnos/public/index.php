@@ -1,41 +1,60 @@
 <?php
 
-
-
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/lib/utils.php';
 
 use App\controllers\AlumnoController;
+use App\controllers\AuthController;
 use App\controllers\DashboardController;
 use App\controllers\SessionController;
 
-//Inciar la sesión si no existe
+// Iniciar la sesión si no existe.
 SessionController::start();
 
-$controller = new AlumnoController();
+$alumnoController = new AlumnoController();
+$dashboardController = new DashboardController();
+$authController = new AuthController();
+
 $accion = $_GET['accion'] ?? 'index';
+$usuario = SessionController::get('usuario');
+$accionesPublicas = ['login', 'autenticar', 'registrar'];
+
+if ($usuario === null && !in_array($accion, $accionesPublicas)) {
+    $accion = 'login';
+}
 
 switch ($accion) {
     case 'crear':
-        $controller->crear();
+        $alumnoController->crear();
         break;
     case 'guardar':
-        $controller->guardar();
+        $alumnoController->guardar();
         break;
     case 'editar':
-        $controller->editar();
+        $alumnoController->editar();
         break;
     case 'actualizar':
-        $controller->actualizar();
+        $alumnoController->actualizar();
         break;
     case 'eliminar':
-        $controller->eliminar();
+        $alumnoController->eliminar();
         break;
     case 'resumen':
-        $dashboardController = new DashboardController();
         $dashboardController->resumen();
         break;
+    case 'autenticar':
+        $authController->authenticate();
+        break;
+    case 'registrar':
+        $authController->register();
+        break;
+    case 'logout':
+        $authController->logout();
+        break;
+    case 'login':
+        $authController->loginPage();
+        break;
     default:
-        $controller->index();
+        $alumnoController->index();
         break;
 }

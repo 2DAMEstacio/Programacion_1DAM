@@ -25,7 +25,7 @@ final class AlumnoController
             $alumnos = Alumno::filteredByTextAndCourse($filtro, $curso);
         }
 
-        $flash = SessionController::pull('flash');
+        $flash = SessionController::readAndRemove('flash');
         $options = Alumno::obtenerModulosAlumnos();
 
         //Mostrar a la vista

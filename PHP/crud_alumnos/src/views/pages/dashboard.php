@@ -16,7 +16,10 @@
                 <h1>Panel de estadísticas</h1>
                 <p>Consulta rápida del estado general de los alumnos registrados, agrupaciones por curso y ranking académico.</p>
             </div>
-            <a class="button" href="index.php?accion=index">Volver al listado</a>
+            <div style="display:flex; gap:12px;">
+                <a class="button" href="index.php?accion=index">Volver al listado</a>
+                <a class="button button-secondary" href="index.php?accion=logout">Cerrar sesion</a>
+            </div>
         </section>
 
         <section class="stats-grid">

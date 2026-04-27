@@ -1,4 +1,10 @@
 <?php declare(strict_types=1); ?>
+<?php
+
+use App\controllers\SessionController;
+
+$authUser = SessionController::user();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,3 +19,13 @@
 </head>
 <body>
 <div class="page-shell">
+<?php if ($authUser !== null): ?>
+    <section class="hero compact">
+        <div>
+            <span class="eyebrow">Sesion iniciada</span>
+            <h1><?= e($authUser->getNombre()) ?></h1>
+            <p><?= e($authUser->getEmail()) ?> · <?= e($authUser->getRol()) ?></p>
+        </div>
+        <a class="button button-secondary" href="index.php?accion=logout">Cerrar sesion</a>
+    </section>
+<?php endif; ?>

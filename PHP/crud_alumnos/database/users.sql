@@ -17,6 +17,6 @@ VALUES
   (
     'Administrador Demo',
     'admin@centro.local',
-    '$2y$10$6vA29Hb7CXWaaYjaJbCvEOcVXHWWTXXMTdWfJGhrsZiJVBW75sn3G',
+    '$2y$10$RyQ8/Uaofup.XZh4AbWD0u5MAb8P3rw9upf6giGOAKuy0jz5IZvKG',
     'admin'
   );

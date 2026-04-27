@@ -51,7 +51,14 @@ DB_PASSWORD=
 
 - La aplicación trabaja con MySQL.
 - Importa `database/schema.sql` en tu servidor MySQL o MariaDB.
+- Importa también `database/users.sql` para crear la tabla `usuarios` y el usuario demo de acceso.
 - El esquema crea la base `mi_base`, la tabla `alumnos` y varios registros de ejemplo.
+
+## Acceso a la aplicación
+
+- Todas las pantallas del CRUD y del dashboard quedan protegidas por sesión.
+- Usuario demo: `admin@centro.local`
+- Contraseña demo: `admin1234`
 
 ## Arquitectura actual
 
